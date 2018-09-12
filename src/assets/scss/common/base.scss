@@ -1,0 +1,45 @@
+p,ul,h1,h2,h3,h4,h5{
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+body,html{
+  background: #fff;
+}
+i{
+  font-style: normal;
+}
+.flex-h{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.flex-v{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.align-c{
+  align-items: center;
+}
+.flex1 {
+  flex: 1;
+}
+.flex2 {
+  flex: 2;
+}
+.flex3 {
+  flex: 3;
+}
+.flex4 {
+  flex: 4;
+}
+.tl {
+  text-align: left;
+}
+.tc {
+  text-align: center;
+}
+.tr {
+  text-align: right;
+}

@@ -1,0 +1,22 @@
+@font-face {
+  font-family: "iconIntegral";
+  src: url("../fonts/iconfont.eot");
+  /* IE9*/
+  src: url("../fonts/iconfont.eot#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#iconfont") format("svg");
+  /* iOS 4.1- */ }
+.van-icon {
+  font-family: 'vant-icon', 'iconIntegral' !important; }
+
+.van-icon-home:before {
+  content: '\e60b'; }
+
+.van-icon-cart:before {
+  content: '\e610'; }
+
+.van-icon-shop:before {
+  content: '\e60e'; }
+
+.van-icon-my:before {
+  content: '\e60c'; }
+
+/*# sourceMappingURL=icon.css.map */
