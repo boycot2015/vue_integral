@@ -17,32 +17,34 @@
     </div>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <div class="goods-content">
-        <van-list
-        v-model="loading"
-        :finished="finished"
-        @load="onLoad">
-          <van-cell-group>
-              <router-link :to="'/detail?id='+item.id" 
-              v-for="(item,index) in goodsList" :key="index">
-                <van-cell >
-                  <template slot="title">
-                    <div class="img">
-                      <lazy-component>
-                        <img  v-lazy="item.imgUrl" alt=""/>
-                      </lazy-component>
+        <lazy-component>
+          <van-list
+          v-model="loading"
+          :finished="finished"
+          @load="onLoad">
+            <van-cell-group>
+                <router-link :to="'/detail?id='+item.id" 
+                v-for="(item,index) in goodsList" :key="index">
+                  <van-cell >
+                    <template slot="title">
+                      <div class="img">
+                          <img  v-lazy="item.imgUrl" alt=""/>
+                          <span v-if="item.type==='jd'" class="icon-jd"></span>
+                          <p v-if="item.status==='soldOut'" class="no-goods">区域无货</p>
+                      </div>
+                    </template>
+                    <div class="txt tl">
+                      <p class="name line-clamp2">{{item.name}}</p>
+                      <span class="price"><i>{{item.price}}</i>积分</span>
+                      <span class="cart">
+                        <van-icon name="cart" size="20px"/>
+                      </span>
                     </div>
-                  </template>
-                  <div class="txt tl">
-                    <p class="name">{{item.name}}</p>
-                    <span class="price"><i>{{item.price}}</i>积分</span>
-                    <span class="cart">
-                      <van-icon name="cart" size="20px"/>
-                    </span>
-                  </div>
-                </van-cell>
-              </router-link>
-          </van-cell-group>
-        </van-list>
+                  </van-cell>
+                </router-link>
+            </van-cell-group>
+          </van-list>
+        </lazy-component>
       </div>
     </van-pull-refresh>
   </div>
@@ -71,14 +73,31 @@
       border-bottom: 0;
     }
   }
+  .name {
+    font-size: 14px;
+    line-height: 20px;
+  }
   .img {
     height: 100px;
     width: 100px;
     border-radius: 4px;
     overflow: hidden;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.03);
     img {
       width: 100%;
       vertical-align: middle;
+    }
+    .no-goods {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      line-height: 30px;
+      font-size: 12px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
     }
   }
   .txt {
@@ -123,6 +142,7 @@ img[lazy=error] {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 img[lazy=loaded] {
     /*width: 100px;*/
@@ -131,7 +151,7 @@ img[lazy=loaded] {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-color: #ccc;
+    background-color: rgba(0, 0, 0, 0.03);
 }
 </style>
 
@@ -154,7 +174,7 @@ img[lazy=loaded] {
       getData(){
         this.$store.dispatch('getGoodsData')
         .then(res=>{
-          // console.log(res.data)
+          console.log(res.data)
           this.goodsList = res.data;
         })
       },

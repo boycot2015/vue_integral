@@ -7,6 +7,7 @@ import Axios from "axios";
 import "./mock";
 import "vant/lib/vant-css/index.css";
 import "./assets/css/main.css";
+import "./assets/js/flexible";
 import { Swipe, SwipeItem } from "vant";
 // 懒加载
 import VueLazyload from "vue-lazyload";
@@ -24,7 +25,8 @@ Vue.use(VueLazyload, {
 //   listenEvents: null
 // };
 Vue.use(Lazyload, {
-  loading: "5000"
+  error: "./assets/images/default.png",
+  loading: "./assets/images/error.png"
 });
 Vue.prototype.$http = Axios;
 Vue.use(Swipe).use(SwipeItem);

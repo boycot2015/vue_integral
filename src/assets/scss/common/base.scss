@@ -9,6 +9,11 @@ body,html{
 i{
   font-style: normal;
 }
+img {
+  width: 100%;
+  height: auto;
+}
+.red {color: #f54040;}
 .flex-h{
   display: flex;
   flex-direction: row;
@@ -42,4 +47,61 @@ i{
 }
 .tr {
   text-align: right;
+}
+.line-clamp2, 
+.line-clamp3, 
+.line-clamp4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp1 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.line-clamp2 {
+  -webkit-line-clamp: 2;
+}
+.line-clamp3 {
+  -webkit-line-clamp: 3;
+}
+.line-clamp4 {
+  -webkit-line-clamp: 4;
+}
+.info {
+  color: #fff;
+  left: 100%;
+  top: -.5em;
+  font-size: .5em;
+  padding: 0 .3em;
+  text-align: center;
+  min-width: 1.2em;
+  line-height: 1.2;
+  position: absolute;
+  border-radius: .6em;
+  box-sizing: border-box;
+  background-color: #f44;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  font-family: PingFang SC,Helvetica Neue,Arial,sans-serif;
+}
+.mr20{
+  margin-right: 0.2rem;
+}
+.color33 {
+  color: #333;
+}
+.icon-jd {
+  position: absolute;
+  top: 4%;
+  right: 4%;
+  width: 40px;
+  height:14px;
+  background: url(../images/ico-jd.png) no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  z-index: 10;
 }
