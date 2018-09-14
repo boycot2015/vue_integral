@@ -27,7 +27,7 @@
           @click="showList = true"
         />
         <!-- 规格选择单元格 -->
-        <van-cell title="规格选择" class="tl" is-link  @click="showContentList = true"/>
+        <van-cell title="规格选择" class="tl" is-link  @click="showSKU = true"/>
         <!-- 参数详情单元格 -->
         <van-cell title="参数详情" class="tl" is-link  @click="showParamsList = true"/>
          <!-- 服务单元格 -->
@@ -81,7 +81,7 @@
       </van-actionsheet>
     <!-- 规格选择列表 -->
       <van-sku
-        v-model="showContentList"
+        v-model="showSKU"
         :sku="sku"
         :goods="goods"
         :goods-id="skuData.goodsId"
@@ -91,9 +91,18 @@
       />
     <!--  参数详情列表 -->
     <van-actionsheet
-      v-model="showParamsList"
-      :actions="serveInfo"
-    />
+      title="参数详情" class="serve-title"
+      v-model="showParamsList">
+         <van-cell-group class="section item">
+            <van-cell title="品牌" class="tl color33">
+            <p class="name">{{detailsData.brand}}</p>
+          </van-cell>
+          <van-cell title="名称" class="tl color33">
+            <p class="name">{{detailsData.name}}</p>
+          </van-cell>
+        </van-cell-group>
+        <van-button @click="showParamsList = false" size="large">取消</van-button>
+      </van-actionsheet>
   </div>
 </template>
 <style lang='scss' scoped>
@@ -209,17 +218,7 @@ const sku = {
   stock_num: 227, // 商品总库存
   collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
   none_sku: false, // 是否无规格商品
-  messages: [
-    {
-      // 商品留言
-      datetime: '0', // 留言类型为 time 时，是否含日期。'1' 表示包含
-      multiple: '0', // 留言类型为 text 时，是否多行文本。'1' 表示多行
-      name: '留言', // 留言名称
-      type: 'text', // 留言类型，可选: id_no（身份证）, text, tel, date, time, email
-      required: '1' // 是否必填 '1' 表示必填
-    }
-  ],
-  hide_stock: false // 是否隐藏剩余库存
+  hide_stock: true // 是否隐藏剩余库存
 }
 export default {
   components: {},
@@ -236,7 +235,7 @@ export default {
       showList:false,
       showServeList:false,
       showParamsList:false,
-      showContentList:false,
+      showSKU:false,
       colors:[],
       serveInfo:[],
       disabledCoupons: [],
@@ -250,15 +249,6 @@ export default {
       skuData: {
         // 商品 id
         goodsId: '946755',
-        // 留言信息
-        messages: {
-          message_0: '12',
-          message_1: ''
-        },
-        // 另一种格式的留言，key 不同
-        cartMessages: {
-          '留言1': 'xxxx'
-        },
         // 选择的商品数量
         selectedNum: 1,
         // 选择的 sku 组合
@@ -279,6 +269,7 @@ export default {
   methods: {
     getData(){
       var id = this.$route.query.id;
+      this.skuData.goodsId = id;
       this.$store.dispatch('getGoodsData',id)
       .then(res=>{
        this.detailsData = res.data;
@@ -299,13 +290,13 @@ export default {
       });
     },
     onClickMiniBtn() {
-      this.$toast('点击图标');
+      this.showSKU = true
     },
     onChange(){
 
     },
     onClickBigBtn() {
-      this.$toast('点击按钮');
+      this.showSKU = true
     },
      onChangeCoupon(index) {
       this.showList = false;
@@ -322,10 +313,11 @@ export default {
       this.isOver = true;
     },
     onBuyClicked(){
-
+      this.$router.push('/order');
     },
     onAddCartClicked(){
-
+      this.$toast('加入购物车成功');
+      this.showSKU = false
     }
   }
 };

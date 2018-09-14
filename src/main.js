@@ -8,6 +8,7 @@ import "./mock";
 import "vant/lib/vant-css/index.css";
 import "./assets/css/main.css";
 import "./assets/js/flexible";
+import commonObj from "./assets/js/common";
 import { Swipe, SwipeItem } from "vant";
 // 懒加载
 import VueLazyload from "vue-lazyload";
@@ -19,6 +20,8 @@ Vue.use(VueLazyload, {
   loading: "./assets/images/error.png",
   attempt: 1
 });
+
+Vue.prototype.$common = commonObj;
 // options 为可选参数，无则不传
 // const options = {
 //   loading: "334",

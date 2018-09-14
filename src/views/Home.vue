@@ -16,13 +16,13 @@
 <style lang="scss" >
 .home {
   .van-swipe__indicators {
-    bottom: 1rem;
+    bottom: 20px;
     .van-swipe__indicator {
       border-radius: 100%;
       background-color: #e8e8e8;
-      width: 0.6rem;
-      height: 0.6rem;
-      margin: 0 0.2rem;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
       &.van-swipe__indicator--active {
         background-color: #666;
       }

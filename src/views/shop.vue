@@ -8,20 +8,17 @@
       </van-search>
     </div>
     <div class="nav-list">
-      <van-tabs v-model="active">
-        <van-tab title="综合"></van-tab>
-        <van-tab title="时间"></van-tab>
-        <van-tab title="价格"></van-tab>
-        <van-tab title="筛选"></van-tab>
+      <van-tabs v-model="active" @click="getNewData">
+        <van-tab v-for="(item,index) in tabs" :title="item" :key="index" ></van-tab>
       </van-tabs>
     </div>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <div class="goods-content">
+      <div class="goods-content" :class="isGrid?'grid':''">
         <lazy-component>
           <van-list
           v-model="loading"
           :finished="finished"
-          @load="onLoad">
+          @load="onLoad"  v-if="!isGrid">
             <van-cell-group>
                 <router-link :to="'/detail?id='+item.id" 
                 v-for="(item,index) in goodsList" :key="index">
@@ -43,6 +40,23 @@
                   </van-cell>
                 </router-link>
             </van-cell-group>
+          </van-list>
+           <van-list
+          v-model="loading"
+          :finished="finished"
+          @load="onLoad"  v-else>
+             <van-cell-group >
+                <router-link :to="'/detail?id='+item.id" 
+                v-for="(item,index) in goodsList" :key="index">
+                  <div class="img">
+                     <img  v-lazy="item.imgUrl" alt=""/>
+                  </div>
+                 <div class="text">
+                    <p class="name">{{item.name}}</p>
+                    <p class="price"><i>{{item.price}}</i>积分</p>
+                 </div>
+                </router-link>
+             </van-cell-group>
           </van-list>
         </lazy-component>
       </div>
@@ -107,9 +121,11 @@
       position: absolute;
       bottom: 0;
       left: 0;
+      font-size: 14px;
       i {
         color: #f54040;
-        margin-right: 10px;
+        font-size: 18px;
+        margin-right: 5px;
       }
     }
     .cart {
@@ -117,6 +133,30 @@
       right: 0;
       bottom: 0;
       color: #f54040;
+    }
+  }
+}
+.goods-content.grid {
+  a {
+    float: left;
+    width: 48.6%;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    background: #fff;
+    &:nth-child(2n){
+      margin-right: 0;
+    }
+    .name {
+      height: 50px;
+    }
+    .img {
+      width: 100%;
+      height: 100%;
+      img {
+        height: 100%;
+        width: 100%;
+      }
     }
   }
 }
@@ -164,7 +204,10 @@ img[lazy=loaded] {
         goodsList:[],
         loading: false,
         isLoading:false,
-        finished: false
+        finished: false,
+        uperPrice:false,
+        isGrid:false,
+        tabs: ['综合','时间','价格','筛选']
       }
     },
     created(){
@@ -174,18 +217,56 @@ img[lazy=loaded] {
       getData(){
         this.$store.dispatch('getGoodsData')
         .then(res=>{
-          console.log(res.data)
           this.goodsList = res.data;
         })
       },
       onSearch(){
 
       },
+      // 筛选
+      getByTime(){
+      },
+      getNewData(index,title){
+        if (title.indexOf('时间')>=0) {
+          this.$store.dispatch('getGoodsData')
+          .then(res=>{
+            let data = res.data;
+            let tempData = [];
+            data.forEach((el,i) => {
+                tempData.push(data[data.length-i-1]);
+            });
+            this.goodsList = tempData;
+          })
+        } else if (title.indexOf('价格')>=0) {
+          this.uperPrice = !this.uperPrice;
+          this.$store.dispatch('getGoodsData')
+          .then(res=>{
+            let data = res.data;
+            let tempData = [];
+            tempData = this.$common.bubbleSort({
+              arr:data,
+              sortName:'price',
+              order:this.uperPrice
+            });
+            this.goodsList = tempData;
+          }) 
+        } else if (title.indexOf('筛选')>=0) {
+            
+        } else {
+          this.getData();
+        }
+      },
+      getByPrice(){
+
+      },
+      showFilter(){
+
+      },
       onLoad() {
         setTimeout(() => {
           const element = this.goodsList;
           for (let i = 0; i < 3; i++) {
-            var lodingItem = element.slice(i,i+1)[0];
+            var lodingItem = element.slice(element.length-i-1,element.length-i)[0];
             this.goodsList.push(lodingItem);
           }
           this.loading = false;
@@ -195,7 +276,7 @@ img[lazy=loaded] {
         }, 500);
       },
       changeLayOut(){
-
+        this.isGrid = !this.isGrid;
       },
       onRefresh() {
         setTimeout(() => {

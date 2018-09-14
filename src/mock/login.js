@@ -8,7 +8,7 @@ const Random = Mock.Random;
 const userData = {
   user: {
     account: "0101",
-    imgUrl: "https://avatar.csdn.net/9/0/A/3_u013861109.jpg",
+    imgUrl: "https://avatar.csdn.net/C/1/4/1_k3rlt.jpg?1536912598",
     date: Random.datetime(), // Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd
     token: "account",
     password: "888888"

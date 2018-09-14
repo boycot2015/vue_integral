@@ -80,6 +80,9 @@ export default {
       if(to.path=='/'){
         this.active = 0;
       }
+      if(to.path=='/shop'){
+        this.active = 1;
+      }
       if(to.path=='/login'){
         this.login = false;
       }
