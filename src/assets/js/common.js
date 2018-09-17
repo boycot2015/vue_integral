@@ -35,6 +35,30 @@ export function bubbleSort({ arr, sortName, order }) {
   }
   return arr;
 }
+var LS = {
+  get(key) {
+    if (localStorage.getItem(key)) {
+      return JSON.parse(localStorage.getItem(key));
+    } else {
+      return this.save(key, {});
+    }
+  },
+  save(key, data) {
+    if (data.length) {
+      localStorage.setItem(key, JSON.stringify(data));
+    } else {
+      localStorage.setItem(key, JSON.stringify([data]));
+    }
+  },
+  update(key, data) {
+    if (data.length) {
+      localStorage.setItem(key, JSON.stringify(data));
+    } else {
+      localStorage.setItem(key, JSON.stringify([data]));
+    }
+  }
+};
 export default {
+  LS,
   bubbleSort
 };

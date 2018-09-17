@@ -39,6 +39,12 @@ img {
 .flex4 {
   flex: 4;
 }
+.fl {
+  float: left;
+}
+.fr{
+  float: right;
+}
 .tl {
   text-align: left;
 }
@@ -47,6 +53,13 @@ img {
 }
 .tr {
   text-align: right;
+}
+.clearfix:after{
+  content: "";
+  height: 0;
+  visibility: hidden;
+  clear: both;
+  display: block;
 }
 .line-clamp2, 
 .line-clamp3, 

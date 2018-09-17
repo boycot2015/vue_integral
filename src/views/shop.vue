@@ -14,51 +14,45 @@
     </div>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <div class="goods-content" :class="isGrid?'grid':''">
-        <lazy-component>
           <van-list
           v-model="loading"
           :finished="finished"
-          @load="onLoad"  v-if="!isGrid">
-            <van-cell-group>
-                <router-link :to="'/detail?id='+item.id" 
-                v-for="(item,index) in goodsList" :key="index">
-                  <van-cell >
-                    <template slot="title">
+          @load="onLoad" class="clearfix">
+              <router-link :to="'/detail?id='+item.id" 
+              v-for="(item,index) in goodsList" :key="index">
+                <lazy-component>
+                  <van-cell-group v-if="!isGrid">
+                      <van-cell >
+                        <template slot="title">
+                          <div class="img">
+                              <img  v-lazy="item.imgUrl" alt=""/>
+                              <span v-if="item.type==='jd'" class="icon-jd"></span>
+                              <p v-if="item.status==='soldOut'" class="no-goods">区域无货</p>
+                          </div>
+                        </template>
+                        <div class="txt tl">
+                          <p class="name line-clamp2">{{item.name}}</p>
+                          <span class="price"><i>{{item.price}}</i>积分</span>
+                          <span class="cart">
+                            <van-icon name="cart" size="20px"/>
+                          </span>
+                        </div>
+                      </van-cell>
+                  </van-cell-group>
+                  <div class="grid" v-else>
                       <div class="img">
-                          <img  v-lazy="item.imgUrl" alt=""/>
+                          <img  :src="item.imgUrl" alt=""/>
                           <span v-if="item.type==='jd'" class="icon-jd"></span>
                           <p v-if="item.status==='soldOut'" class="no-goods">区域无货</p>
                       </div>
-                    </template>
-                    <div class="txt tl">
+                    <div class="txt">
                       <p class="name line-clamp2">{{item.name}}</p>
-                      <span class="price"><i>{{item.price}}</i>积分</span>
-                      <span class="cart">
-                        <van-icon name="cart" size="20px"/>
-                      </span>
+                      <p class="price"><i>{{item.price}}</i>积分</p>
                     </div>
-                  </van-cell>
-                </router-link>
-            </van-cell-group>
-          </van-list>
-           <van-list
-          v-model="loading"
-          :finished="finished"
-          @load="onLoad"  v-else>
-             <van-cell-group >
-                <router-link :to="'/detail?id='+item.id" 
-                v-for="(item,index) in goodsList" :key="index">
-                  <div class="img">
-                     <img  v-lazy="item.imgUrl" alt=""/>
                   </div>
-                 <div class="text">
-                    <p class="name">{{item.name}}</p>
-                    <p class="price"><i>{{item.price}}</i>积分</p>
-                 </div>
-                </router-link>
-             </van-cell-group>
+                </lazy-component>
+              </router-link>
           </van-list>
-        </lazy-component>
       </div>
     </van-pull-refresh>
   </div>
@@ -82,6 +76,7 @@
   margin: 98px 0 50px;
   a {
     display: block;
+    color: #333;
     border-bottom: 1px solid #f0f0f0;
     &:last-child{
       border-bottom: 0;
@@ -142,20 +137,29 @@
     width: 48.6%;
     margin-right: 10px;
     margin-bottom: 10px;
+    border-radius: 4px;
+    overflow: hidden;
     text-align: left;
     background: #fff;
     &:nth-child(2n){
       margin-right: 0;
     }
-    .name {
-      height: 50px;
-    }
     .img {
       width: 100%;
       height: 100%;
+      border-radius: 0px;
       img {
         height: 100%;
         width: 100%;
+      }
+    }
+    .txt {
+      padding: 10px;
+      .name {
+        height: 40px; 
+      }
+      .price {
+        position: relative;
       }
     }
   }

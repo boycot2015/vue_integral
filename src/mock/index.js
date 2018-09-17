@@ -3,7 +3,7 @@ const Mock = require("mockjs");
 
 import goodsAPI from "./shop";
 import loginAPI from "./login";
-
+import cartAPI from "./cart";
 
 // 登录相关
 Mock.mock(/\/login/, "post", loginAPI.login);
@@ -13,6 +13,12 @@ Mock.mock(/\/loginbycode/, "get", loginAPI.loginByThirdparty);
 
 // 商品相关
 Mock.mock(/\/goodslist/, "get", goodsAPI.getGoodsData);
+
+// 购物车
+Mock.mock(/\/cart/, "get", cartAPI.getCartData);
+Mock.mock(/\/addcart/, "post", cartAPI.addCart);
+Mock.mock(/\/deletecart/, "post", cartAPI.deleteCart);
+Mock.mock(/\/updatecart/, "post", cartAPI.updateCart);
 export default Mock;
 
 // Mock.mock( url, post/get , 返回的数据)；

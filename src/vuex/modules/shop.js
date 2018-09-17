@@ -19,7 +19,6 @@ const GoodsData = {
   actions: {
     // 获取产品列表
     getGoodsData({ commit, state }, id) {
-
       return new Promise((resolve, reject) => {
         getGoodsData(state.token, id).then(response => {
           const data = response.data;

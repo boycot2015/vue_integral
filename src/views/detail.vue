@@ -48,7 +48,7 @@
        </van-cell-group>
     </div>
     <van-goods-action>
-      <van-goods-action-mini-btn icon="cart" text="购物车" info="5" @click="onClickMiniBtn" />
+      <van-goods-action-mini-btn icon="cart" text="购物车" :info="cartNum" @click="onClickCartBtn" />
       <van-goods-action-big-btn v-if="detailsData.status=='selling'" text="加入购物车" @click="onClickBigBtn" />
       <van-goods-action-big-btn v-if="detailsData.status=='selling'" text="立即购买" @click="onClickBigBtn" primary />
       <van-button size="large" v-else text="区域无货" disabled />
@@ -87,6 +87,7 @@
         :goods-id="skuData.goodsId"
         :hide-stock="sku.hide_stock"
         @buy-clicked="onBuyClicked"
+        @stepper-change="getInitNum"
         @add-cart="onAddCartClicked"
       />
     <!--  参数详情列表 -->
@@ -95,10 +96,14 @@
       v-model="showParamsList">
          <van-cell-group class="section item">
             <van-cell title="品牌" class="tl color33">
-            <p class="name">{{detailsData.brand}}</p>
+            <p class="name tl">{{detailsData.brand}}</p>
           </van-cell>
           <van-cell title="名称" class="tl color33">
-            <p class="name">{{detailsData.name}}</p>
+            <p class="name tl">{{detailsData.name}}</p>
+          </van-cell>
+          <van-cell title="库存" class="tl color33">
+            <p class="name tl" v-if="detailsData.status==='selling'">有货</p>
+            <p class="name tl" v-else>无货</p>
           </van-cell>
         </van-cell-group>
         <van-button @click="showParamsList = false" size="large">取消</van-button>
@@ -211,7 +216,8 @@ const sku = {
       s1: '1215', // 规格类目 k_s 为 s1 的对应规格值 id
       s2: '1193', // 规格类目 k_s 为 s2 的对应规格值 id
       s3: '0', // 最多包含3个规格值，为0表示不存在该规格
-      stock_num: 110 // 当前 sku 组合对应的库存
+      stock_num: 110, // 当前 sku 组合对应的库存
+      coupon:{}
     }
   ],
   price: '1.00', // 默认价格（单位元）
@@ -231,6 +237,7 @@ export default {
       detailsData:{},
       bannerList:[],
       chosenCoupon: -1,
+      selectCoupons:{},
       coupons: [],
       showList:false,
       showServeList:false,
@@ -238,6 +245,8 @@ export default {
       showSKU:false,
       colors:[],
       serveInfo:[],
+      initNum:1,
+      cartNum:0,
       disabledCoupons: [],
       isOver:false,
       goods: {
@@ -251,20 +260,14 @@ export default {
         goodsId: '946755',
         // 选择的商品数量
         selectedNum: 1,
-        // 选择的 sku 组合
-        selectedSkuComb: {
-          id: 2257,
-          price: 100,
-          s1: '30349',
-          s2: '1193',
-          s3: '0',
-          stock_num: 111
-        }
+        // 选择的 coupons 
+        coupons:{}
       }
     };
   },
   created() {
     this.getData();
+    this.cartNum = this.$store.getters.cartList.length;
   },
   methods: {
     getData(){
@@ -273,7 +276,7 @@ export default {
       this.$store.dispatch('getGoodsData',id)
       .then(res=>{
        this.detailsData = res.data;
-       console.log(res.data)
+      //  console.log(res.data)
        coupon.value = res.data.price*(100-coupon.discount)/100;
        this.bannerList = res.data.bannerImgUrl;
        this.serveInfo = res.data.serveInfo;
@@ -289,6 +292,9 @@ export default {
        });
       });
     },
+    onClickCartBtn(){
+      this.$router.push('/cart')
+    },
     onClickMiniBtn() {
       this.showSKU = true
     },
@@ -301,6 +307,7 @@ export default {
      onChangeCoupon(index) {
       this.showList = false;
       this.chosenCoupon = index;
+      this.selectCoupons = this.coupons[index];
     },
     onExchange(code) {
       if(code!='888888'){
@@ -312,11 +319,35 @@ export default {
     showImg(){
       this.isOver = true;
     },
+    getInitNum(val){
+      this.initNum = val;
+    },
     onBuyClicked(){
       this.$router.push('/order');
     },
     onAddCartClicked(){
-      this.$toast('加入购物车成功');
+      var cartData = {};
+      this.cartNum += this.initNum;
+
+      this.initNum = this.initNum||1;
+      cartData.id = this.$route.query.id;
+      cartData.initNum = this.initNum||1;
+      cartData.price = this.detailsData.price;
+      cartData.imgUrl = this.detailsData.imgUrl;
+      cartData.desc = this.detailsData.desc;
+      cartData.name = this.detailsData.name;
+      cartData.type = this.detailsData.type;
+      cartData.status = this.detailsData.status;
+      cartData.hasDiscount = this.detailsData.hasDiscount;
+      cartData.isHot = this.detailsData.isHot;
+      cartData.selectCoupons = this.selectCoupons;
+      this.$store.dispatch('addCart',cartData).then(res=>{
+       if(res.code==200){
+         this.$toast(res.msg);
+       }else {
+         this.$toast(res.error);
+       }
+      })
       this.showSKU = false
     }
   }
